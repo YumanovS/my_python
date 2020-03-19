@@ -1,0 +1,146 @@
+from random import randint
+class Point: 
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
+        print(f"Инициализация координат ({x},{y})")
+
+    def set(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        return Point(self.x + other.x, self.y + other.y)
+
+    def __str__(self):
+        return f'Точка с координатами ({self.x},{self.y})'   
+    def randompoint():
+        Point(randint(-1,1),randint(-1,1))
+        
+class nps:
+    def __init__(self, name='Персонаж без ника'):
+        self.name = name
+        self.speed = 1
+        self.ammo = 10
+        self.position = Point()
+    def get_position(self):
+        print(f"Позиция: {self.position}")
+    def say(self):
+        print(f"{self.name} говорит")
+    def moving(self):
+        self.position += Point(randint(-1,1),randint(-1,1))
+    def shoot(self):
+        self.ammo -= 1
+        print(f"Пафф! Осталось патронов: {self.ammo}")
+    def takeSpeedUp(self):
+        self.speed += items.speedUp
+        print (f" Скорость увеличена на {items.speedUp}")
+    def takeSpeedDn(self):
+        self.speed += items.speedDn
+    def get_speed(self):
+        print(f"Скорость : {self.speed}")
+        
+class flynps(nps):
+    def set_flyspeed(self,flyspeed = 2):
+        self.flyspeed = flyspeed
+    def get_flyspeed(self):
+        print(self.flyspeed)
+    def movingbyfly(self):
+        self.position += Point(2,0)
+class items:
+    def takeSpeedUp(self):
+        self.speed += 2
+        print (f"Скорость увеличена на {2}")
+        self.get_speed()
+    def takeSpeedDn(self):
+        if self.speed >= 3:
+            self.speed -= 2
+            print (f"Скорость уменьшена на {2}")
+        else:
+            self.speed = 1
+            print("Невозможно уменьшить скорость !")
+        self.get_speed()
+    def takeAmmo(self, name = "Ammo"):
+        self.ammo += 5
+        print(f"Теперь патронов: {self.ammo}")
+
+
+
+        
+
+
+nps1 = flynps("killer")
+nps1.say()
+nps1.position = Point(1,1)
+nps1.movingbyfly()
+nps1.moving()
+nps1.shoot()
+nps1.shoot()
+items.takeSpeedUp(nps1)
+items.takeSpeedUp(nps1)
+items.takeSpeedDn(nps1)
+items.takeSpeedUp(nps1)
+items.takeSpeedDn(nps1)
+items.takeSpeedUp(nps1)
+items.takeSpeedUp(nps1)
+items.takeAmmo(nps1)
+items.takeAmmo(nps1)
+nps1.shoot()
+nps1.shoot()
+nps1.shoot()
+nps1.shoot()
+nps2 = nps("noob")
+nps2.say()
+nps2.moving()
+nps2.moving()
+nps2.shoot()
+items.takeSpeedUp(nps2)
+items.takeSpeedDn(nps2)
+items.takeSpeedDn(nps2)
+
+
+(*Out*)
+
+(*
+Инициализация координат (0,0)
+killer говорит
+Инициализация координат (1,1)
+Инициализация координат (2,0)
+Инициализация координат (3,1)
+Инициализация координат (1,0)
+Инициализация координат (4,1)
+Пафф! Осталось патронов: 9
+Пафф! Осталось патронов: 8
+Скорость увеличена на 2
+Скорость : 3
+Скорость увеличена на 2
+Скорость : 5
+Скорость уменьшена на 2
+Скорость : 3
+Скорость увеличена на 2
+Скорость : 5
+Скорость уменьшена на 2
+Скорость : 3
+Скорость увеличена на 2
+Скорость : 5
+Скорость увеличена на 2
+Скорость : 7
+Теперь патронов: 13
+Теперь патронов: 18
+Пафф! Осталось патронов: 17
+Пафф! Осталось патронов: 16
+Пафф! Осталось патронов: 15
+Пафф! Осталось патронов: 14
+Инициализация координат (0,0)
+noob говорит
+Инициализация координат (-1,0)
+Инициализация координат (-1,0)
+Инициализация координат (-1,-1)
+Инициализация координат (-2,-1)
+Пафф! Осталось патронов: 9
+Скорость увеличена на 2
+Скорость : 3
+Скорость уменьшена на 2
+Скорость : 1
+Невозможно уменьшить скорость !
+Скорость : 1 *)
