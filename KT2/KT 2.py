@@ -1,81 +1,75 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[25]:
-
-
-#Сейчас существуют некоторые проблемы с правильным запуском
-
+#import модулей
 import requests
 from bs4 import BeautifulSoup
 import csv
+import time
 
-URL = 'https://www.avito.ru/sankt-peterburg/avtomobili/gaz-ASgBAgICAUTgtg3KmSg?radius=0'
-goods = []
-
-HOST = 'https://www.port Beautifuavito.ru'
+URL = 'https://ria.ru/economy/' #ссылка на сайт
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
-}
-FILE = 'goods.csv'
+} 
+
+
 
 #def
 
+# последняя новость
+def get_last_name(html):
+    soup = BeautifulSoup(html, 'html.parser')
+    name = soup.find('a', class_ = 'list-item__title color-font-hover-only').get_text()
+    # name - последняя новость на сайте
+    return name
+
+# подключение к сайту через requests
 def get_html(url, params=None):
     r = requests.get(url, headers = HEADERS,params = params)
     return r
-
-def get_content(html):
+# получение последней новости с сайта 
+def get_link(html):
+    global last_name 
+    global URL
     soup = BeautifulSoup(html, 'html.parser')
-    items = soup.find_all('div', class_ = 'item__line')
+    #название новости
+    name = soup.find('a', class_ = 'list-item__title color-font-hover-only').get_text()
+    # ссылка на новость
+    link = soup.find('a', class_ = 'list-item__title color-font-hover-only').get('href')
+    # время новости
+    time_post = soup.find('div',class_ = 'list-item__date').get_text(),
+    #новая ссылка на сайт с самой новостью
+    html = get_html(link)
+    # проверка последней новости (если новая новость, то она будет публиковаться)
+    if last_name != name:
+        last_name = name
+        print(time_post)
+        get_news(html.text)
+    else:
+        print('нет новых новостей') #это для наглядности, в боте не нужно 
+    # вызов функии каждые 30 сек
+    time.sleep(30)
+    html = get_html(URL) 
+    get_link(html.text)
     
-    for item in items:
-        goods.append({
-            'name': item.find('a', class_ = 'snippet-link').get_text(),
-            'price': item.find('span', class_ = 'snippet-price').get_text(strip = True),
-            'parametrs': item.find('div', class_ = 'specific-params specific-params_block').get_text(strip = True),
-            'adress': item.find('div', class_ = 'item-address').get_text(strip = True),
-            'time': item.find('div', class_ = 'snippet-date-info').get_text(strip = True),
-            'link': HOST + item.find('a', class_ = 'snippet-link').get('href')
-        })
-
-    
-
-def get_pages_count(html):
+def get_news(html):
+    global last_name
     soup = BeautifulSoup(html, 'html.parser')
-    pagination = soup.find_all('span', class_ = 'pagination-item-1WyVp') 
-    if pagination: 
-        return int(pagination[-2].get_text()) 
-    else: 
-        return 1
-    
-#def save_file(items,path): 
-#    with open(path, 'w', newline = '', encoding = 'UTF-8') as file: 
-#        writer = csv.writer(file, delimiter = ';') 
-#        writer.writerow(['Name', 'Price', 'Parametrs','adress','Time_Add', 'Link']) 
-#        for item in items: 
-#            writer.writerow([item['name'] , item['price'] , item['parametrs'] , item['adress'] , item['time'] , item['link']])
-
-
+    # все абзацы текста новости 
+    news = soup.find_all('div', class_ = 'article__text')
+    print(last_name)
+    # пробегаем циклом все абзацы новости соединяются вместе
+    for new in news:
+        print(new.get_text())
+       
+ # основная функция 
 def parse(): 
     html = get_html(URL) 
+    # проверка подлючения
     if html.status_code == 200: 
-        pages_count = get_pages_count(html.text)
-        for page in range(1, pages_count + 1): 
-            print(f'Парсинг страницы {page} из {pages_count}...') 
-            html = get_html(URL, params = {'p': page}) 
-            goods.append(get_content(html.text)) 
-            #save_file(goods,FILE)
+        # если подключение есть, то выполняем функции
+        get_link(html.text)
     else:
         print('Error')
-    print(goods) 
-#main
-
+     
+ #main
+last_name = 'none'
+# запускаем основную функцию
 parse()
-
-
-# In[ ]:
-
-
-
-
