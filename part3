@@ -1,0 +1,12 @@
+import pandas as pd
+
+url = 'https://raw.githubusercontent.com/dm-fedorov/pandas_basic/master/data/football.csv'
+
+football = pd.read_csv(url)
+print(football.groupby(['Position'])[["Wage"]].mean().sort_values(['Wage'], ascending=False).index[0])
+print(football.groupby(['Position'])[["Value"]].mean().sort_values(['Value'], ascending=False).index[0])
+print(football.groupby(["Club"]).sum().loc["Chelsea"].Wage)
+print(football[(football.Nationality == "Argentina") & (football.Age == 20)].Wage.max())
+print(football[(football.Nationality == "Argentina") & (football.Age == 30)].Wage.max())
+print(football[(football.Nationality == "Argentina") & (football.Age == 30)].Wage.min())
+print({football[(football.Nationality == "Argentina") & (football.Club == "FC Barcelona")].groupby(["Strength"]).max().index[0],football[(football.Nationality == "Argentina") & (football.Club == "FC Barcelona")].groupby(["Balance"]).max().index[0]})
