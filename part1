@@ -1,0 +1,27 @@
+import pandas as pd
+
+url = "https://raw.githubusercontent.com/dm-fedorov/pandas_basic/master/data/football.csv"
+
+football = pd.read_csv(url)
+print(round(football.Age.mean()))
+print(football.Composure.count())
+print(round(football.ShortPassing.std(),2))
+print(football.Wage.sum())
+print(football[football.Value > 0].Value.min())
+# second part
+print(round(football[football.Wage > football.Wage.mean()].SprintSpeed.mean(),2))
+print(round(football[football.Wage < football.Wage.mean()].SprintSpeed.mean(),2))
+print(football[football.Wage == football.Wage.max()].Position)
+print(football[football.Nationality == "Brazil"].Penalties.sum())
+print(round(football[football.HeadingAccuracy > 50].Age.mean(),2))
+print(football[(football.Composure > football.Composure.max() * 0.9) &
+               (football.Reactions > football.Reactions.max() * 0.9)].Age.min())
+print(round(football[football.Age == football.Age.max()].Reactions.mean() -
+      football[football.Age == football.Age.min()].Reactions.mean(),2))
+print(football[football.Value > football.Value.mean()]["Nationality"].value_counts().index[0])
+print(round((football[(football.Position == "GK") &
+      (football.GKReflexes == football.GKReflexes.max())].Wage.mean()) /
+      (football[(football.Position == "GK") &
+      (football.GKHandling == football.GKHandling.max())].Wage.mean()),2))
+print(round((football[football.Aggression == football.Aggression.max()].ShotPower.mean()) /
+      football[football.Aggression == football.Aggression.min()].ShotPower.mean(),2))
