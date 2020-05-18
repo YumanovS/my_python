@@ -1,0 +1,17 @@
+import pandas as pd
+
+url = "https://raw.githubusercontent.com/dm-fedorov/pandas_basic/master/data/football.csv"
+
+football = pd.read_csv(url)
+print(len(football['Club'].value_counts().index))
+print(football['Club'].value_counts().index[-1])
+print(football.Position.value_counts(normalize=True).loc[football.Position.value_counts(normalize=True) > 0.1])
+print(football.Position.value_counts(normalize=True).loc[football.Position.value_counts(normalize=True) < 0.01])
+print({football.FKAccuracy.value_counts(bins = 5).index.left.min(),football.FKAccuracy.value_counts(bins = 5).index.right.min()})
+print(football.FKAccuracy.value_counts(bins = 5).index[0])
+print(football[football.Nationality == "Spain"].Wage.value_counts(bins = 4))
+print(football[football.Club == "Manchester United"].Nationality.nunique())
+print(football[(football.Nationality == 'Brazil') & (football.Club == "Juventus")].Name.unique())
+print(football[football.Age > 35].Club.value_counts().index[0])
+print(football[football.Nationality == "Argentina"].Age.value_counts(bins = 4).unique()[-1])
+print(football[football.Nationality == 'Spain'].Age.value_counts(normalize=True))
