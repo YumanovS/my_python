@@ -1,0 +1,23 @@
+import pandas as pd
+from datetime import datetime, timedelta
+import time
+
+data = pd.read_csv('https://raw.githubusercontent.com/dm-fedorov/pandas_basic/master/data/data.tsv', sep='\t')
+
+
+def convert_to_datetime(row):
+    return datetime.strptime(row['date'], '%d.%m.%Y %H:%M')
+
+def make_unix_time(row):
+    return time.mktime(row['datetime'].timetuple())
+
+
+data['datetime'] = data.apply(convert_to_datetime, axis=1)
+data['unixtime'] = data.apply(make_unix_time, axis=1)
+
+group = data.groupby(["user_id"]).agg(["min","max"]).unixtime
+group["diff"] = group['max'] - group['min']
+group = group[group["diff"] > 0]
+mean_lifetime = round(group["diff"].mean() / 86400,2)
+print(group)
+print(f'{mean_lifetime} days')
