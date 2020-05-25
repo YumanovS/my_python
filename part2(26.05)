@@ -1,0 +1,6 @@
+import pandas as pd
+
+url = "https://raw.githubusercontent.com/dm-fedorov/pandas_basic/master/data/new_year_film.csv"
+films = pd.read_csv(url , decimal = ",")
+films_rait = round(films["ranking"].mean(),2)
+print(films_rait)
