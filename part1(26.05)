@@ -1,0 +1,30 @@
+from datetime import datetime, timedelta
+
+
+#task1
+date_string = 'May 9 2017 9:00AM'
+date_datetime = datetime.strptime(date_string, '%b %d %Y %H:%M%p')
+hour = int(date_datetime.hour)
+print(date_datetime)
+print(hour)
+
+#task2
+date_string = 'May 9 2017 9:00AM'
+date_datetime = datetime.strptime(date_string, '%b %d %Y %H:%M%p')
+date_datetime += timedelta(hours=1)
+print(date_datetime)
+
+#task3
+date_str = date_datetime.strftime('%Y-%m-%d')
+print(date_str)
+
+#task4
+startDate = '2017-01-01'
+endDate = '2017-01-03'
+startDate_datetime = datetime.strptime(startDate, '%Y-%m-%d')
+endDate_datetime = datetime.strptime(endDate, '%Y-%m-%d')
+current_day = startDate_datetime
+current_day = startDate_datetime
+while current_day <= endDate_datetime:
+    print(current_day.strftime('%Y-%m-%d %H:%M:%S'))
+    current_day += timedelta(hours=1)
