@@ -1,0 +1,82 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime
+import pylab
+
+#def
+
+def to_datetime(row):
+    return datetime.strptime(row['Дата'], '%d.%m.%Y')
+
+## part1
+
+df = pd.read_csv("https://raw.githubusercontent.com/dm-fedorov/python_basic/master/data/vkontakte_group_01_2016-08-01_2020-03-15.csv")
+dfc= pd.get_dummies(df, columns=['Критерий'])
+p = dfc[['Дата', 'Значение']][dfc['Критерий_views'] == 1]
+p['Дата'] = p.apply(to_datetime, axis=1).dt.strftime('%Y')
+py = p.groupby(['Дата'])['Значение'].sum()
+print("Посещения группы")
+print(py)
+
+## part2
+
+a = dfc[['Дата','Значение']][dfc['Критерий_reach'] == 1]
+a['Дата'] = a.apply(to_datetime, axis=1).dt.strftime('%Y-%m')
+a0 = a.groupby(['Дата'])['Значение'].sum()
+f = dfc[['Дата','Значение']][dfc['Критерий_reach_subscribers'] == 1]
+f['Дата'] = f.apply(to_datetime, axis=1).dt.strftime('%Y-%m')
+f0 = f.groupby(['Дата'])['Значение'].sum()
+plt.title('Анализ охвата')
+plt.xlabel('Date')
+plt.ylabel('Value')
+a0.plot(label="reach", linestyle='--',color = 'orange')
+f0.plot(label = "reach_subscribers", linestyle='--',color = 'red')
+pylab.ylim(0, 9000)
+plt.legend(loc="upper left")
+plt.grid(True)
+plt.show()
+
+## part3
+
+gender = dfc[['Дата', 'Значение','Парам. №1']][dfc['Критерий_gender'] == 1]
+gender1 = gender.groupby(['Парам. №1'])['Значение'].sum()
+print("Демография (пол)")
+print(gender1)
+
+## part4
+
+age = dfc[['Парам. №1', 'Значение']][dfc['Критерий_age'] == 1]
+age1 = age.groupby(['Парам. №1'])['Значение'].sum()
+print("Демография (возраст)")
+print(age1)
+
+## part5
+
+country = dfc[['Парам. №1','Значение']][dfc['Критерий_countries'] == 1]
+country1 = country.groupby(['Парам. №1'])['Значение'].sum()
+print('Демография (страна)')
+print(country1)
+
+## part6
+
+get_feedback = dfc[['Дата','Парам. №1','Значение']][dfc['Критерий_feedback'] == 1]
+get_feedback['Дата'] = get_feedback.apply(to_datetime, axis=1).dt.strftime('%Y-%m')
+print(get_feedback['Парам. №1'].value_counts())
+
+## part7
+
+like = get_feedback[get_feedback['Парам. №1'] == 'Нравится'].groupby(['Дата'])['Значение'].sum().plot(label="лайки", linestyle='--',color = 'orange')
+comment = get_feedback[get_feedback['Парам. №1'] == 'Комментарии'].groupby(['Дата'])['Значение'].sum().plot(label="комментарии", linestyle='--',color = 'red')
+repost = get_feedback[get_feedback['Парам. №1'] == 'Рассказали друзьям'].groupby(['Дата'])['Значение'].sum().plot(label="репосты", linestyle='--',color = 'yellow')
+plt.legend(loc="upper left")
+plt.grid(True)
+plt.show()
+
+## part8
+
+print('Лучшая опулярность у пользователей в возрасте: ',str(age1.sort_values(ascending=False).index[1]) , 'лет и', str(age1.sort_values(ascending=False).index[0]), 'лет)')
+print('Лучшая популярность у пользователей, которые живут в: ', str(country1.sort_values(ascending=False).index[0]),")")
+
+## part_Final
+
+print("Исходя из результатов анализа видно, что по возрастному и демографическому критерию группа пользуется популярностью среди активных пользователей моложе 30 лет, проживающих в России. Делаю вывод, что группа подходит для продвижения данного товара")
