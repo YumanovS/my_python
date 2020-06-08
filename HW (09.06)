@@ -1,0 +1,35 @@
+import pandas as pd
+import json
+import pymorphy2
+import ssl
+
+#open
+
+with open('tinkoff_hh.json', encoding='utf8') as ti:
+    file = ti.readlines()
+a = [json.loads(x) for x in file if 'index' not in x]
+b = pd.DataFrame(a)
+
+## task1
+
+wage = b[["vacancy","income","region"]][b["income"] != "не указан"].drop_duplicates().sort_values(by = 'income')
+print(wage)
+
+print(wage["vacancy"].value_counts())
+
+## task2
+
+ssl._create_default_https_context = ssl._create_unverified_context
+url = "https://raw.githubusercontent.com/dm-fedorov/pandas_basic/master/data/data_stat/yandex-stat-q.csv"
+a = pymorphy2.MorphAnalyzer()
+b = pd.read_csv(url)
+
+aF = [j for i, j in enumerate(b["Поисковая фраза"].str.lower())]
+lst = list(map(lambda x: x.split(), aF))
+aL = [a.parse(x)[0].normal_form for sl in lst for x in sl]
+itog= pd.Series(aL)
+
+#считает долго, но считает)
+
+print("Статистика встречаемости слов в поисковых фразах: ")
+print(itog.value_counts()[itog.value_counts() > 1000])
